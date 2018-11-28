@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.001,maximum-scale=1.0,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>THETA WebRTC Sample</title>
+  <link rel="stylesheet" type="text/css" media="all" href="css/swiper.min.css">
+  <link rel="stylesheet" type="text/css" media="all" href="css/plugin.css">
+  <script src="js/jquery-1.8.3.min.js"></script>
+  <script src="js/swiper.min.js"></script>
+  <script src="js/theta_webrtc_cmd.js"></script>
+  <script src="js/theta_webrtc_ui.js"></script>
+  <script src="js/theta_webrtc.js"></script>
+</head>
+<body onLoad="initPreview();startPreview('2K');">
+<div class="plugin_base">
+  <div class="app_header">
+    <div class="spacer"></div>
+    <div class="title">THETA WebRTC Sample</div>
+    <div class="btn_container">
+      <button class="btn btn--setting" id="setting_btn"></button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page" id="shooting_page">
+      <div class="setting_list" id="setting_page">
+        <div class="setting_list_header">
+          <div class="spacer"></div>
+          <div class="title" id="setting_list_title"></div>
+          <div class="btn_container">
+            <button class="setting_close_btn" id="setting_close_btn"></button>
+          </div>
+        </div>
+        <div class="section_title"></div>
+        <ul>
+          <li>
+            <label for="color_temp" class="label" id="color_temp_label"></label>
+            <label class="form-switch">
+              <input type="checkbox" name="setting" id="color_temp">
+              <i></i>
+            </label>
+          </li>
+          <li>
+            <label for="image_size" class="label" id="image_size_label"></label>
+            <label class="value" id="image_size"></label>
+          </li>
+          <li>
+            <label for="shutter_volume_btn" class="label" id="shutter_volume_btn_label"></label>
+            <button class="btn" id="shutter_volume_btn"></button>
+          </li>
+          <li>
+            <label for="remaining_pictures" class="label" id="remaining_pictures_label"></label>
+            <label class="value" id="remaining_pictures"></label>
+          </li>
+          <li>
+            <label for="battery_level" class="label" id="battery_level_label"></label>
+            <label class="value" id="battery_level"></label>
+          </li>
+        </ul>
+      </div>
+      <div class="pluginpreview">
+        <video id="previewImage" autoplay playsinline style="width: 1920px; height: 960px;"></video>
+      </div>
+      <div class="pluginctrl">
+        <div class="pluginctrl__shoot" onChange="setOptions()">
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="ev_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap ev" id="ev_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="iso_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap iso" id="iso_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="wb_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap wb" id="wb_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="colortemp_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap colortemp" id="colortemp_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="shutter_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap shutter" id="shutter_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="manual_shutter_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap manual_shutter" id="manual_shutter_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting__detail show inithide" id="option_menu">
+            <div class="pluginctrl__shoot__setting__detail__btn_wrap option" id="option_menu_wrap">
+            </div>
+          </div>
+          <div class="pluginctrl__shoot__setting hide" id="shoot__setting-auto">
+            <button class="btn btn--data" data-setting="ev" data-position="3_1">
+              <div>
+                <p class="btn--data__key">EV</p>
+                <p class="btn--data__value" id="evlabel1"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="wb" data-position="3_2">
+              <div>
+                <p class="btn--data__key">WB</p>
+                <p class="btn--data__value" id="colortemplabel0"></p>
+                <p class="btn--data__value--icon" id="wblabel0"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="option" data-position="3_3">
+              <div>
+                <p class="btn--data__key">OptionSetting</p>
+                <p class="btn--data__value" id="ftlabel"></p>
+              </div>
+            </button>
+          </div>
+          <div class="pluginctrl__shoot__setting hide" id="shoot__setting-shutter">
+            <button class="btn btn--data" data-setting="shutter" data-position="3_1">
+              <div>
+                <p class="btn--data__key">ShutterSpeed</p>
+                <p class="btn--data__value" id="splabel1"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="ev" data-position="3_2">
+              <div>
+                <p class="btn--data__key">EV</p>
+                <p class="btn--data__value" id="evlabel2"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="wb" data-position="3_3">
+              <div>
+                <p class="btn--data__key" id="WB">WB</p>
+                <p class="btn--data__value" id="colortemplabel1"></p>
+                <p class="btn--data__value--icon" id="wblabel1"></p>
+              </div>
+            </button>
+          </div>
+          <div class="pluginctrl__shoot__setting hide" id="shoot__setting-iso">
+            <button class="btn btn--data" data-setting="iso" data-position="3_1">
+              <div>
+                <p class="btn--data__key">ISO</p>
+                <p class="btn--data__value" id="isolabel2"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="ev" data-position="3_2">
+              <div>
+                <p class="btn--data__key">EV</p>
+                <p class="btn--data__value" id="evlabel3"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="wb" data-position="3_3">
+              <div>
+                <p class="btn--data__key">WB</p>
+                <p class="btn--data__value" id="colortemplabel2"></p>
+                <p class="btn--data__value--icon" id="wblabel2"></p>
+              </div>
+            </button>
+          </div>
+          <div class="pluginctrl__shoot__setting hide" id="shoot__setting-manual">
+            <button class="btn btn--data" data-setting="iso" data-position="3_1">
+              <div>
+                <p class="btn--data__key">ISO</p>
+                <p class="btn--data__value" id="isolabel3"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="manual_shutter" data-position="3_2">
+              <div>
+                <p class="btn--data__key">ShutterSpeed</p>
+                <p class="btn--data__value" id="splabel2"></p>
+              </div>
+            </button>
+            <button class="btn btn--data" data-setting="wb" data-position="3_3">
+              <div>
+                <p class="btn--data__key">WB</p>
+                <p class="btn--data__value" id="colortemplabel3"></p>
+                <p class="btn--data__value--icon" id="wblabel3"></p>
+              </div>
+            </button>
+          </div>
+          <div class="pluginctrl__shoot__shutter">
+            <button class="btn btn--camera-image-white-normal" id="camera_image_btn"></button>
+            <button class="btn btn--shutter-normal" id="apigateway_btn" onclick="takePicture()"></button>
+            <button class="btn btn--mode-auto-normal" id="mode_btn"></button>
+          </div>
+        </div>
+      </div>
+      <div class="action_sheet" id="setting_action">
+        <div class="btn_wrap">
+          <ul id="action_sheet__btn_list" onChange="changeExposureMode()">
+          </ul>
+          <ul>
+            <li>
+              <label calss="btn" id="cancel_btn" class="action"></label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
